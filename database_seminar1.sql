@@ -99,3 +99,15 @@ select detail_id from seller_detail where seller_id in
 8. Найти детали большого веса (>12), которые поставляются единственным поставщиком
 select name, detail_id from detail where detail_id not in (
 select detail_id from seller_detail group by detail_id having count(*) > 1) and weight > 12
+
+9. Для каждого производителя посчитать количество экспортируемых деталей и 
+их распределение по цветам
+select s.surname,
+sum(case when color = 'КРАСНЫЙ' THEN 1 ELSE 0 END) red,
+sum(case when color = 'ЗЕЛЕНЫЙ' THEN 1 ELSE 0 END) green,
+sum(case when color = 'ГОЛУБОЙ' THEN 1 ELSE 0 END) blue,
+sum(case when color = 'ЖЕЛТЫЙ' THEN 1 ELSE 0 END) yellow,
+count(*) as average
+from seller s join seller_detail sd on (s.seller_id = sd.seller_id) 
+join detail d on (sd.detail_id = d.detail_id)
+group by s.seller_id
